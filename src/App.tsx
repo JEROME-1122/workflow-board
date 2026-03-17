@@ -1,10 +1,14 @@
 import "./App.css";
 import Button from "./components/ui/Button";
+import TextInput from "./components/ui/TextInput";
 
 function App() {
   return (
     <>
-      <Button />
+      <div className="grid grid-cols-2 gap-4 p-4 items-center justify-center ">
+        <TextInput />
+        <Button />
+      </div>
     </>
   );
 }
