@@ -62,7 +62,7 @@ function TaskForm() {
         onChange={(e) => setPriority(e.target.value as Priority)}
       />
 
- 
+      <Button onClick={handleSubmit}>Save Task</Button>
     </>
   );
 }
