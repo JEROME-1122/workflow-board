@@ -1,15 +1,19 @@
 import React from "react";
-
-function TextInput() {
-  const [value, setValue] = React.useState("");
+type Props = {
+  label?: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+};
+function TextInput({ label, value, onChange, placeholder }: Props) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium">Enter Text</label>
+      {label && <label className="text-sm font-medium">{label}</label>}
       <input
         className="border p-2 rounded"
         value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="Enter text..."
+        onChange={onChange}
+        placeholder={placeholder}
       />
     </div>
   );
