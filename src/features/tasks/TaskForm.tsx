@@ -3,7 +3,8 @@ import Button from "../../components/ui/Button";
 import TextInput from "../../components/ui/TextInput";
 import TextArea from "../../components/ui/TextArea";
 import Select from "../../components/ui/Select";
-// import { Task, Status, Priority } from "../../types/task";
+import type { Priority, Status, Task } from "../../types/task";
+
 // import { v4 as uuidv4 } from "uuid";
 
 function TaskForm() {
@@ -12,6 +13,7 @@ function TaskForm() {
   const [assignee, setAssignee] = useState("");
   const [tags, setTags] = useState("");
   const [status, setStatus] = useState("Backlog");
+  const [priority, setPriority] = useState<Priority>("Low");
 
   return (
     <>
@@ -48,6 +50,19 @@ function TaskForm() {
         ]}
         onChange={(e) => setStatus(e.target.value as Status)}
       />
+
+      <Select
+        label="Priority"
+        value={priority}
+        options={[
+          { label: "Low", value: "Low" },
+          { label: "Medium", value: "Medium" },
+          { label: "High", value: "High" },
+        ]}
+        onChange={(e) => setPriority(e.target.value as Priority)}
+      />
+
+ 
     </>
   );
 }
