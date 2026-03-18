@@ -1,15 +1,21 @@
 import React from "react";
 
-function TextArea() {
-  const [value, setValue] = React.useState("");
+type Props = {
+  label?: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  placeholder?: string;
+};
+
+function TextArea({ label, value, onChange, placeholder }: Props) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium">Enter the Description </label>
+      {label && <label className="text-sm font-medium">{label}</label>}
       <textarea
         className="border p-2 rounded"
         value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="Enter Description  "
+        onChange={onChange}
+        placeholder={placeholder}
       ></textarea>
     </div>
   );
