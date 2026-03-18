@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../components/ui/Button";
 import TextInput from "../../components/ui/TextInput";
 import TextArea from "../../components/ui/TextArea";
 import Select from "../../components/ui/Select";
 import type { Priority, Status, Task } from "../../types/task";
+import Toast from "../../components/ui/Toast";
 
-// import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 function TaskForm() {
   const [title, setTitle] = useState("");
@@ -15,8 +16,59 @@ function TaskForm() {
   const [status, setStatus] = useState("Backlog");
   const [priority, setPriority] = useState<Priority>("Low");
 
+  const [error, setError] = useState("");
+
+  const handleSubmit = () => {
+    if (!title.trim()) {
+      setError("Title is required");
+      return;
+    }
+
+    if (!description.trim()) {
+      setError("Description is required");
+      return;
+    }
+
+    if (!assignee.trim()) {
+      setError("Assignee is required");
+      return;
+    }
+
+    if (!tags.trim()) {
+      setError("Tag  is required");
+      return;
+    }
+
+    setError(""); // clear error
+
+    const newTask: Task = {
+      id: uuidv4(),
+      title,
+      description,
+      status,
+      priority,
+      assignee,
+      tags: tags.split(",").map((t) => t.trim()),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    onSave(newTask);
+    onClose();
+  };
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(""), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   return (
     <>
+      <h1 className="text-lg font-bold">Create Task</h1>
+
+      {error && <Toast message={error} type="error" />}
       <TextInput
         label="Title"
         value={title}
