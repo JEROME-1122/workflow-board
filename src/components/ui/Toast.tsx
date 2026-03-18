@@ -26,7 +26,7 @@ function Toast({ message, type = "success", duration = 3000 }: Props) {
 
   return (
     <div
-      className={`text-white px-4 py-2 rounded ${styles[type]} w-md text-center fixed top-4 right-0  `}
+      className={`text-white px-4 py-4 rounded ${styles[type]} w-100 text-center  fixed top-4 right-0  inline `}
     >
       {message}
     </div>

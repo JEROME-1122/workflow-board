@@ -65,57 +65,58 @@ function TaskForm() {
   }, [error]);
 
   return (
-    <>
+    <div className="p-4 container mx-auto">
       <h1 className="text-lg font-bold">Create Task</h1>
-
       {error && <Toast message={error} type="error" />}
-      <TextInput
-        label="Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+      <div className="grid grid-cols-2 gap-4  bg-white rounded shadow-md  p-4 mb-4">
+        <TextInput
+          label="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <TextInput
+          label="Assignee"
+          value={assignee}
+          onChange={(e) => setAssignee(e.target.value)}
+        />
+        <TextInput
+          label="Tags (comma separated)"
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
+        />
 
-      <TextArea
-        label="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
+        <Select
+          label="Status"
+          value={status}
+          options={[
+            { label: "Backlog", value: "Backlog" },
+            { label: "In Progress", value: "In Progress" },
+            { label: "Done", value: "Done" },
+          ]}
+          onChange={(e) => setStatus(e.target.value as Status)}
+        />
 
-      <TextInput
-        label="Assignee"
-        value={assignee}
-        onChange={(e) => setAssignee(e.target.value)}
-      />
-      <TextInput
-        label="Tags (comma separated)"
-        value={tags}
-        onChange={(e) => setTags(e.target.value)}
-      />
+        <Select
+          label="Priority"
+          value={priority}
+          options={[
+            { label: "Low", value: "Low" },
+            { label: "Medium", value: "Medium" },
+            { label: "High", value: "High" },
+          ]}
+          onChange={(e) => setPriority(e.target.value as Priority)}
+        />
 
-      <Select
-        label="Status"
-        value={status}
-        options={[
-          { label: "Backlog", value: "Backlog" },
-          { label: "In Progress", value: "In Progress" },
-          { label: "Done", value: "Done" },
-        ]}
-        onChange={(e) => setStatus(e.target.value as Status)}
-      />
-
-      <Select
-        label="Priority"
-        value={priority}
-        options={[
-          { label: "Low", value: "Low" },
-          { label: "Medium", value: "Medium" },
-          { label: "High", value: "High" },
-        ]}
-        onChange={(e) => setPriority(e.target.value as Priority)}
-      />
-
-      <Button onClick={handleSubmit}>Save Task</Button>
-    </>
+        <TextArea
+          label="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <Button onClick={handleSubmit} className="mx-auto">
+          Save Task
+        </Button>
+      </div>
+    </div>
   );
 }
 
