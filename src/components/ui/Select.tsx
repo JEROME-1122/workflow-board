@@ -1,21 +1,23 @@
-function Select() {
-  type Option = {
-    value: string;
-    label: string;
-  };
-  const options: Option[] = [
-    { value: "emp1", label: "Emp 1" },
-    { value: "emp2", label: "Emp 2" },
-    { value: "emp3", label: "Emp 3" },
-  ];
+type Option = {
+  label: string;
+  value: string;
+};
 
+type Props = {
+  label?: string;
+  value: string;
+  options: Option[];
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+};
+
+function Select({ label, value, options, onChange }: Props) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium">Select an Option</label>
-      <select className="border p-2 rounded">
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
+      {label && <label className="text-sm">{label}</label>}
+      <select className="border p-2 rounded" value={value} onChange={onChange}>
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
           </option>
         ))}
       </select>
