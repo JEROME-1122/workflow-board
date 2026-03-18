@@ -8,8 +8,9 @@ import TextArea from "../../components/ui/TextArea";
 
 function TaskForm() {
   const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-     const [assignee, setAssignee] = useState("");
+  const [description, setDescription] = useState("");
+  const [assignee, setAssignee] = useState("");
+  const [tags, setTags] = useState("");
 
   return (
     <>
@@ -29,6 +30,11 @@ function TaskForm() {
         label="Assignee"
         value={assignee}
         onChange={(e) => setAssignee(e.target.value)}
+      />
+      <TextInput
+        label="Tags (comma separated)"
+        value={tags}
+        onChange={(e) => setTags(e.target.value)}
       />
     </>
   );
