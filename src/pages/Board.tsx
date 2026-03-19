@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import type { Status, Task } from "../types/task";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import Button from "../components/ui/Button";
@@ -9,10 +10,22 @@ import TaskCard from "../features/tasks/TaskCard";
 function Board() {
   const [tasks, setTasks] = useLocalStorage<Task[]>("tasks", []);
   const [open, setOpen] = useState(false);
+  const [params, setParams] = useSearchParams();
+  const [search, setSearch] = useState(params.get("search") || "");
+  const [priorityFilter, setPriorityFilter] = useState(
+    params.get("priority") || "",
+  );
+  const [sortBy, setSortBy] = useState(params.get("sort") || "");
 
-  const [search, setSearch] = useState("");
-  const [priorityFilter, setPriorityFilter] = useState("");
-  const [sortBy, setSortBy] = useState("");
+  useEffect(() => {
+    const newParams: any = {};
+
+    if (search) newParams.search = search;
+    if (priorityFilter) newParams.priority = priorityFilter;
+    if (sortBy) newParams.sort = sortBy;
+
+    setParams(newParams);
+  }, [search, priorityFilter, sortBy]);
 
   //  CREATE
   const handleSave = (task: Task) => {
