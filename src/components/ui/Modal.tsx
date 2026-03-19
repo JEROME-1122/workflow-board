@@ -9,7 +9,7 @@ export default function Modal({ isOpen, onClose, children }: Props) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded w-[400px] relative">
+      <div className="bg-white p-6 rounded w-[500px] relative">
         <button className="absolute top-2 right-2" onClick={onClose}>
           ✖
         </button>
