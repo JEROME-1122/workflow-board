@@ -4,26 +4,29 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import Button from "../components/ui/Button";
 import Modal from "../components/ui/Modal";
 import TaskForm from "../features/tasks/TaskForm";
-import TaskCard from "../features/tasks/TaskCard"; 
-
+import TaskCard from "../features/tasks/TaskCard";
 
 function Board() {
   const [tasks, setTasks] = useLocalStorage<Task[]>("tasks", []);
   const [open, setOpen] = useState(false);
 
-  // ✅ CREATE
+  const [search, setSearch] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState("");
+  const [sortBy, setSortBy] = useState("");
+
+  //  CREATE
   const handleSave = (task: Task) => {
     setTasks((prev) => [...prev, task]);
   };
 
-  // ✅ UPDATE (dropdown)
+  //  UPDATE (dropdown)
   const handleUpdate = (updatedTask: Task) => {
     setTasks((prevTasks) =>
       prevTasks.map((t) => (t.id === updatedTask.id ? updatedTask : t)),
     );
   };
 
-  // ✅ DRAG & DROP
+  //  DRAG & DROP
   const handleDrop = (status: Status, e: React.DragEvent) => {
     e.preventDefault();
 
@@ -52,10 +55,38 @@ function Board() {
     );
   };
 
-  //   FILTER
-  const backlog = tasks.filter((t) => t.status === "Backlog");
-  const inProgress = tasks.filter((t) => t.status === "In Progress");
-  const done = tasks.filter((t) => t.status === "Done");
+  //   FILTER & SEARCH
+
+  const filteredTasks = tasks.filter((task) => {
+    const matchesSearch =
+      task.title.toLowerCase().includes(search.toLowerCase()) ||
+      task.description.toLowerCase().includes(search.toLowerCase());
+
+    const matchesPriority = !priorityFilter || task.priority === priorityFilter;
+
+    return matchesSearch && matchesPriority;
+  });
+
+  const sortedTasks = [...filteredTasks].sort((a, b) => {
+    if (sortBy === "created") {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    }
+
+    if (sortBy === "updated") {
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+    }
+
+    if (sortBy === "priority") {
+      const order = { High: 3, Medium: 2, Low: 1 };
+      return order[b.priority] - order[a.priority];
+    }
+
+    return 0;
+  });
+
+  const backlog = sortedTasks.filter((t) => t.status === "Backlog");
+  const inProgress = sortedTasks.filter((t) => t.status === "In Progress");
+  const done = sortedTasks.filter((t) => t.status === "Done");
 
   return (
     <div className="p-6">
@@ -63,9 +94,44 @@ function Board() {
 
       <Button onClick={() => setOpen(true)}>+ Create Task</Button>
 
+      <div className="flex gap-4 mt-4">
+        <input
+          type="text"
+          placeholder="Search tasks..."
+          className="border p-2 rounded w-1/2"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+        <select
+          className="border p-2 rounded"
+          value={priorityFilter}
+          onChange={(e) => setPriorityFilter(e.target.value)}
+        >
+          <option value="">All Priority</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+        <select
+          className="border p-2 rounded"
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+        >
+          <option value="">Sort By</option>
+          <option value="created">Created (Latest)</option>
+          <option value="updated">Updated (Latest)</option>
+          <option value="priority">Priority</option>
+        </select>
+      </div>
+
       <Modal isOpen={open} onClose={() => setOpen(false)}>
         <TaskForm onSave={handleSave} onClose={() => setOpen(false)} />
       </Modal>
+
+      {filteredTasks.length === 0 && (
+        <p className="mt-4 text-gray-500">No tasks found</p>
+      )}
 
       {/*   BOARD */}
       <div className="grid grid-cols-3 gap-4 mt-6">
