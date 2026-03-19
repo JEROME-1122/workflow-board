@@ -1,4 +1,4 @@
-export type Status = "To Do" | "In Progress" | "Done";
+export type Status = "Backlog" | "In Progress" | "Done";
 
 export type Priority = "Low" | "Medium" | "High";
 
