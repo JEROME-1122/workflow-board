@@ -21,7 +21,7 @@ function TaskCard({ task }: Props) {
             <Badge key={index} text={tag} />
           ))}
         </div>
-
+        <p className="text-xs mt-2">Status: {task.status}</p>
         <p className="text-xs mt-2">Priority: {task.priority}</p>
       </Card>
     </div>
