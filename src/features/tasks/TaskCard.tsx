@@ -20,6 +20,7 @@ function TaskCard({ task, onUpdate, onDelete, onEdit }: Props) {
   const [open, setOpen] = useState(false);
 
   const [tick, setTick] = useState(0);
+  console.log(tick);
 
   const handleStatusChange = (value: string) => {
     const updatedTask: Task = {
