@@ -24,7 +24,7 @@ function Board() {
 
   // ✅ DRAG & DROP
   const handleDrop = (status: Status, e: React.DragEvent) => {
-    e.preventDefault(); // 🔥 important
+    e.preventDefault();  
 
     const id = e.dataTransfer.getData("taskId");
 
@@ -41,7 +41,7 @@ function Board() {
     );
   };
 
-  // 🔥 FILTER
+  //   FILTER
   const backlog = tasks.filter((t) => t.status === "Backlog");
   const inProgress = tasks.filter((t) => t.status === "In Progress");
   const done = tasks.filter((t) => t.status === "Done");
