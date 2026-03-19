@@ -30,7 +30,26 @@ function TaskCard({ task, onUpdate }: Props) {
         <p className="text-sm text-gray-600">{task.description}</p>
 
         <p className="text-sm mt-1">👤 {task.assignee}</p>
-
+        <p className="text-sm mt-1">
+          {new Date(task.createdAt).toLocaleString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })}
+        </p>
+        <p className="text-sm mt-1">
+          {new Date(task.updatedAt).toLocaleString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })}
+        </p>
         <div className="flex gap-2 mt-2">
           {task.tags.map((tag, index) => (
             <Badge key={index} text={tag} />
