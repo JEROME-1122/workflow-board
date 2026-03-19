@@ -18,8 +18,12 @@ function TaskCard({ task, onUpdate }: Props) {
 
     onUpdate(updatedTask);
   };
+
+  const handleDragStart = (e: React.DragEvent) => {
+    e.dataTransfer.setData("taskId", task.id);
+  };
   return (
-    <div>
+    <div draggable onDragStart={handleDragStart}>
       <Card>
         <h3 className="font-bold">{task.title}</h3>
 

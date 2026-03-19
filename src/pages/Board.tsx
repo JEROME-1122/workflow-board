@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Task } from "../types/task";
+import type { Status, Task } from "../types/task";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import Button from "../components/ui/Button";
 import Modal from "../components/ui/Modal";
@@ -8,24 +8,44 @@ import TaskCard from "../features/tasks/TaskCard";
 
 function Board() {
   const [tasks, setTasks] = useLocalStorage<Task[]>("tasks", []);
-
   const [open, setOpen] = useState(false);
 
+  // ✅ CREATE
   const handleSave = (task: Task) => {
-    setTasks([...tasks, task]);
+    setTasks((prev) => [...prev, task]);
   };
 
+  // ✅ UPDATE (dropdown)
   const handleUpdate = (updatedTask: Task) => {
     setTasks((prevTasks) =>
       prevTasks.map((t) => (t.id === updatedTask.id ? updatedTask : t)),
     );
-
-    console.log(updatedTask);
   };
 
+  // ✅ DRAG & DROP
+  const handleDrop = (status: Status, e: React.DragEvent) => {
+    e.preventDefault(); // 🔥 important
+
+    const id = e.dataTransfer.getData("taskId");
+
+    setTasks((prev) =>
+      prev.map((t) =>
+        t.id === id
+          ? {
+              ...t,
+              status,
+              updatedAt: new Date().toISOString(),
+            }
+          : t,
+      ),
+    );
+  };
+
+  // 🔥 FILTER
   const backlog = tasks.filter((t) => t.status === "Backlog");
   const inProgress = tasks.filter((t) => t.status === "In Progress");
   const done = tasks.filter((t) => t.status === "Done");
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Workflow Board</h1>
@@ -36,11 +56,16 @@ function Board() {
         <TaskForm onSave={handleSave} onClose={() => setOpen(false)} />
       </Modal>
 
-      {/* 🔥 BOARD */}
+      {/*   BOARD */}
       <div className="grid grid-cols-3 gap-4 mt-6">
-        {/* Backlog */}
-        <div>
+        {/*  BACKLOG */}
+        <div
+          className="bg-gray-100 p-3 rounded"
+          onDragOver={(e) => e.preventDefault()} 
+          onDrop={(e) => handleDrop("Backlog", e)}
+        >
           <h2 className="font-bold mb-2">Backlog</h2>
+
           <div className="flex flex-col gap-3">
             {backlog.map((task) => (
               <TaskCard key={task.id} task={task} onUpdate={handleUpdate} />
@@ -48,9 +73,14 @@ function Board() {
           </div>
         </div>
 
-        {/* In Progress */}
-        <div>
+        {/*   IN PROGRESS */}
+        <div
+          className="bg-gray-100 p-3 rounded"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => handleDrop("In Progress", e)}
+        >
           <h2 className="font-bold mb-2">In Progress</h2>
+
           <div className="flex flex-col gap-3">
             {inProgress.map((task) => (
               <TaskCard key={task.id} task={task} onUpdate={handleUpdate} />
@@ -58,9 +88,14 @@ function Board() {
           </div>
         </div>
 
-        {/* Done */}
-        <div>
+        {/*   DONE */}
+        <div
+          className="bg-gray-100 p-3 rounded"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => handleDrop("Done", e)}
+        >
           <h2 className="font-bold mb-2">Done</h2>
+
           <div className="flex flex-col gap-3">
             {done.map((task) => (
               <TaskCard key={task.id} task={task} onUpdate={handleUpdate} />
