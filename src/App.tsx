@@ -1,9 +1,10 @@
 import "./App.css";
+import Board from "./pages/Board";
 // import Button from "./components/ui/Button";
 // import Select from "./components/ui/Select";
 // import TextArea from "./components/ui/TextArea";
 // import TextInput from "./components/ui/TextInput";
-import TaskForm from "./features/tasks/TaskForm";
+// import TaskForm from "./features/tasks/TaskForm";
 
 function App() {
   return (
@@ -14,7 +15,9 @@ function App() {
         <TextArea />
         <Button />
       </div> */}
-      <TaskForm />
+      {/* <TaskForm /> */}
+
+      <Board />
     </>
   );
 }
