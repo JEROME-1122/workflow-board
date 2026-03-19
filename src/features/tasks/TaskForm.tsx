@@ -8,12 +8,17 @@ import Toast from "../../components/ui/Toast";
 
 import { v4 as uuidv4 } from "uuid";
 
-function TaskForm() {
+type Props = {
+  onSave: (task: Task) => void;
+  onClose: () => void;
+};
+
+function TaskForm({ onSave, onClose }: Props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [assignee, setAssignee] = useState("");
   const [tags, setTags] = useState("");
-  const [status, setStatus] = useState("Backlog");
+  const [status, setStatus] = useState<Status>("Backlog");
   const [priority, setPriority] = useState<Priority>("Low");
 
   const [error, setError] = useState("");
