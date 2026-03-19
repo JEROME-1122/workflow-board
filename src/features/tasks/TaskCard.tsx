@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Card from "../../components/ui/Card";
 import Badge from "../../components/ui/Badge";
 import Select from "../../components/ui/Select";
@@ -6,6 +6,8 @@ import Button from "../../components/ui/Button";
 import Modal from "../../components/ui/Modal";
 import TaskForm from "./TaskForm";
 import type { Task, Status } from "../../types/task";
+
+import { getRelativeTime } from "../../utils/time";
 
 type Props = {
   task: Task;
@@ -17,7 +19,8 @@ type Props = {
 function TaskCard({ task, onUpdate, onDelete, onEdit }: Props) {
   const [open, setOpen] = useState(false);
 
- 
+  const [tick, setTick] = useState(0);
+
   const handleStatusChange = (value: string) => {
     const updatedTask: Task = {
       ...task,
@@ -28,14 +31,21 @@ function TaskCard({ task, onUpdate, onDelete, onEdit }: Props) {
     onUpdate(updatedTask);
   };
 
- 
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData("taskId", task.id);
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTick((t) => t + 1);
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <>
-      <div draggable onDragStart={handleDragStart}>
+      <div draggable onDragStart={handleDragStart} className="relative ">
         <Card>
           <h3 className="font-bold">{task.title}</h3>
 
@@ -43,7 +53,6 @@ function TaskCard({ task, onUpdate, onDelete, onEdit }: Props) {
 
           <p className="text-sm mt-1">👤 {task.assignee}</p>
 
-    
           <p className="text-sm mt-1">
             Created At:&nbsp;
             {new Date(task.createdAt).toLocaleString("en-IN", {
@@ -54,6 +63,10 @@ function TaskCard({ task, onUpdate, onDelete, onEdit }: Props) {
               minute: "2-digit",
               second: "2-digit",
             })}
+          </p>
+
+          <p className="text-xs mt-1 text-gray-500 absolute top-2 right-2 bg-blue-200 px-2 py-2 rounded">
+            {getRelativeTime({ dateString: task.updatedAt })}
           </p>
 
           <p className="text-sm mt-1">
@@ -68,7 +81,6 @@ function TaskCard({ task, onUpdate, onDelete, onEdit }: Props) {
             })}
           </p>
 
-      
           <div className="flex gap-2 mt-2">
             {task.tags.map((tag, index) => (
               <Badge key={index} text={tag} />
@@ -77,7 +89,6 @@ function TaskCard({ task, onUpdate, onDelete, onEdit }: Props) {
 
           <p className="text-xs mt-2">Priority: {task.priority}</p>
 
-      
           <div className="mt-2">
             <Select
               value={task.status}
@@ -90,7 +101,6 @@ function TaskCard({ task, onUpdate, onDelete, onEdit }: Props) {
             />
           </div>
 
-    
           <div className="flex gap-2 mt-3">
             <Button variant="secondary" onClick={() => setOpen(true)}>
               Edit
@@ -103,7 +113,6 @@ function TaskCard({ task, onUpdate, onDelete, onEdit }: Props) {
         </Card>
       </div>
 
- 
       <Modal isOpen={open} onClose={() => setOpen(false)}>
         <TaskForm
           initialData={task}
