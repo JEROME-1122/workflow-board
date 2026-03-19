@@ -31,6 +31,8 @@ function TaskCard({ task, onUpdate }: Props) {
 
         <p className="text-sm mt-1">👤 {task.assignee}</p>
         <p className="text-sm mt-1">
+          {" "}
+          Created At:&nbsp;
           {new Date(task.createdAt).toLocaleString("en-IN", {
             day: "2-digit",
             month: "short",
@@ -41,6 +43,7 @@ function TaskCard({ task, onUpdate }: Props) {
           })}
         </p>
         <p className="text-sm mt-1">
+          Updated At:&nbsp;
           {new Date(task.updatedAt).toLocaleString("en-IN", {
             day: "2-digit",
             month: "short",
