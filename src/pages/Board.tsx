@@ -24,7 +24,7 @@ function Board() {
 
   // ✅ DRAG & DROP
   const handleDrop = (status: Status, e: React.DragEvent) => {
-    e.preventDefault();  
+    e.preventDefault();
 
     const id = e.dataTransfer.getData("taskId");
 
@@ -38,6 +38,16 @@ function Board() {
             }
           : t,
       ),
+    );
+  };
+
+  const handleDelete = (id: string) => {
+    setTasks((prev) => prev.filter((t) => t.id !== id));
+  };
+
+  const handleEdit = (updatedTask: Task) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === updatedTask.id ? updatedTask : t)),
     );
   };
 
@@ -61,14 +71,20 @@ function Board() {
         {/*  BACKLOG */}
         <div
           className="bg-gray-100 p-3 rounded"
-          onDragOver={(e) => e.preventDefault()} 
+          onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => handleDrop("Backlog", e)}
         >
           <h2 className="font-bold mb-2">Backlog</h2>
 
           <div className="flex flex-col gap-3">
             {backlog.map((task) => (
-              <TaskCard key={task.id} task={task} onUpdate={handleUpdate} />
+              <TaskCard
+                key={task.id}
+                task={task}
+                onUpdate={handleUpdate}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+              />
             ))}
           </div>
         </div>
@@ -83,7 +99,13 @@ function Board() {
 
           <div className="flex flex-col gap-3">
             {inProgress.map((task) => (
-              <TaskCard key={task.id} task={task} onUpdate={handleUpdate} />
+              <TaskCard
+                key={task.id}
+                task={task}
+                onUpdate={handleUpdate}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+              />
             ))}
           </div>
         </div>
@@ -98,7 +120,13 @@ function Board() {
 
           <div className="flex flex-col gap-3">
             {done.map((task) => (
-              <TaskCard key={task.id} task={task} onUpdate={handleUpdate} />
+              <TaskCard
+                key={task.id}
+                task={task}
+                onUpdate={handleUpdate}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+              />
             ))}
           </div>
         </div>

@@ -11,15 +11,22 @@ import { v4 as uuidv4 } from "uuid";
 type Props = {
   onSave: (task: Task) => void;
   onClose: () => void;
+  initialData?: Task;
 };
 
-function TaskForm({ onSave, onClose }: Props) {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [assignee, setAssignee] = useState("");
-  const [tags, setTags] = useState("");
-  const [status, setStatus] = useState<Status>("Backlog");
-  const [priority, setPriority] = useState<Priority>("Low");
+function TaskForm({ onSave, onClose, initialData }: Props) {
+  const [title, setTitle] = useState(initialData?.title || "");
+  const [description, setDescription] = useState(
+    initialData?.description || "",
+  );
+  const [assignee, setAssignee] = useState(initialData?.assignee || "");
+  const [tags, setTags] = useState(initialData?.tags?.join(",") || "");
+  const [status, setStatus] = useState<Status>(
+    initialData?.status || "Backlog",
+  );
+  const [priority, setPriority] = useState<Priority>(
+    initialData?.priority || "Low",
+  );
 
   const [error, setError] = useState("");
 
@@ -47,14 +54,15 @@ function TaskForm({ onSave, onClose }: Props) {
     setError(""); // clear error
 
     const newTask: Task = {
-      id: uuidv4(),
+      id: initialData?.id || uuidv4(),
       title,
       description,
       status,
       priority,
       assignee,
       tags: tags.split(",").map((t) => t.trim()),
-      createdAt: new Date().toISOString(),
+      createdAt: initialData?.createdAt || new Date().toISOString(),
+
       updatedAt: new Date().toISOString(),
     };
 
@@ -71,7 +79,9 @@ function TaskForm({ onSave, onClose }: Props) {
 
   return (
     <div className="p-4 container mx-auto">
-      <h1 className="text-lg font-bold">Create Task</h1>
+      <h1 className="text-lg font-bold">
+        {initialData ? "Edit Task" : "Create Task"}
+      </h1>
       {error && <Toast message={error} type="error" />}
       <div className="grid grid-cols-2 gap-4  bg-white rounded shadow-md  p-4 mb-4">
         <TextInput
@@ -117,8 +127,8 @@ function TaskForm({ onSave, onClose }: Props) {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <Button onClick={handleSubmit} className="mx-auto">
-          Save Task
+        <Button onClick={handleSubmit}>
+          {initialData ? "Update Task" : "Save Task"}
         </Button>
       </div>
     </div>
