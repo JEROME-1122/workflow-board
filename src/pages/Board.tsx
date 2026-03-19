@@ -15,6 +15,14 @@ function Board() {
     setTasks([...tasks, task]);
   };
 
+  const handleUpdate = (updatedTask: Task) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((t) => (t.id === updatedTask.id ? updatedTask : t)),
+    );
+
+    console.log(updatedTask);
+  };
+
   const backlog = tasks.filter((t) => t.status === "Backlog");
   const inProgress = tasks.filter((t) => t.status === "In Progress");
   const done = tasks.filter((t) => t.status === "Done");
@@ -35,7 +43,7 @@ function Board() {
           <h2 className="font-bold mb-2">Backlog</h2>
           <div className="flex flex-col gap-3">
             {backlog.map((task) => (
-              <TaskCard key={task.id} task={task} />
+              <TaskCard key={task.id} task={task} onUpdate={handleUpdate} />
             ))}
           </div>
         </div>
@@ -45,7 +53,7 @@ function Board() {
           <h2 className="font-bold mb-2">In Progress</h2>
           <div className="flex flex-col gap-3">
             {inProgress.map((task) => (
-              <TaskCard key={task.id} task={task} />
+              <TaskCard key={task.id} task={task} onUpdate={handleUpdate} />
             ))}
           </div>
         </div>
@@ -55,7 +63,7 @@ function Board() {
           <h2 className="font-bold mb-2">Done</h2>
           <div className="flex flex-col gap-3">
             {done.map((task) => (
-              <TaskCard key={task.id} task={task} />
+              <TaskCard key={task.id} task={task} onUpdate={handleUpdate} />
             ))}
           </div>
         </div>

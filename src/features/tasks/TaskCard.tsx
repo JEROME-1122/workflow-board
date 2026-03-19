@@ -1,12 +1,23 @@
 import Card from "../../components/ui/Card";
 import Badge from "../../components/ui/Badge";
-import type { Task } from "../../types/task";
+import type { Task, Status } from "../../types/task";
+import Select from "../../components/ui/Select";
 
 type Props = {
   task: Task;
+  onUpdate: (updatedTask: Task) => void;
 };
 
-function TaskCard({ task }: Props) {
+function TaskCard({ task, onUpdate }: Props) {
+  const handleStatusChange = (value: string) => {
+    const updatedTask: Task = {
+      ...task,
+      status: value as Status,
+      updatedAt: new Date().toISOString(),
+    };
+
+    onUpdate(updatedTask);
+  };
   return (
     <div>
       <Card>
@@ -21,8 +32,20 @@ function TaskCard({ task }: Props) {
             <Badge key={index} text={tag} />
           ))}
         </div>
-        <p className="text-xs mt-2">Status: {task.status}</p>
+
         <p className="text-xs mt-2">Priority: {task.priority}</p>
+
+        <div className="mt-2">
+          <Select
+            value={task.status}
+            options={[
+              { label: "Backlog", value: "Backlog" },
+              { label: "In Progress", value: "In Progress" },
+              { label: "Done", value: "Done" },
+            ]}
+            onChange={(e) => handleStatusChange(e.target.value)}
+          />
+        </div>
       </Card>
     </div>
   );
